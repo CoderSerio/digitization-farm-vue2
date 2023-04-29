@@ -21,10 +21,51 @@
           </div>
         </div>
       </div>
-      <div class="column right"></div>
+      <div class="column right">
+        <div class="content">
+          <div class="overview-data">
+            <li>
+              猪一共有{{ overviewData?.pig?.totalNum }}只， 其中健康个体有{{
+                overviewData?.pig?.healthyNum
+              }}只
+            </li>
+            <li>
+              牛一共有{{ overviewData?.cow?.totalNum }}只，其中健康个体有{{
+                overviewData?.cow?.healthyNum
+              }}只
+            </li>
+            <li>
+              羊一共有{{ overviewData?.sheep?.totalNum }}只，其中健康个体有{{
+                overviewData?.sheep?.healthyNum
+              }}只
+            </li>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row bottom">
-      <div class="column left"></div>
+      <div class="column left">
+        <div class="content">
+          <div class="table">
+            <el-table :data="tableData" border style="width: 100%" height="180">
+              <el-table-column
+                v-for="col in tableColumns"
+                :key="col.prop"
+                :prop="col.prop"
+                :label="col.label"
+              >
+                <template slot-scope="scope">
+                  {{
+                    col?.render
+                      ? col?.render(scope.row[col?.prop], scope.row)
+                      : scope.row[col?.prop]
+                  }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </div>
       <!-- <div class="column right"></div> -->
     </div>
   </div>
@@ -32,6 +73,10 @@
 
 <script>
 import messageData from "@/mock/messageData";
+import infoData from "@/mock/infoData";
+import overviewData from "@/mock/overviewData";
+import { tableColumns } from "@/pages/Table/config";
+
 export default {
   mounted() {
     this.getTemperatureWarningItem();
@@ -40,7 +85,11 @@ export default {
     return {
       date: new Date(),
       temperatureWarningItem: null,
-      messageData: messageData,
+      messageData,
+      infoData,
+      overviewData,
+      tableColumns,
+      tableData: [],
     };
   },
   props: ["chosenModel"],
@@ -59,6 +108,9 @@ export default {
       });
     },
   },
+  watch() {
+    // TODO: 监听一下choseModel的变化
+  },
 };
 </script>
 
@@ -74,8 +126,7 @@ export default {
   justify-content: space-between;
   pointer-events: none;
   color: #fff;
-  font-weight: 500;
-  font-size: large;
+  font-weight: 600;
   .row {
     display: flex;
     justify-content: space-between;
@@ -101,10 +152,16 @@ export default {
 
 .temperature {
   height: 100%;
-  font-weight: 600;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 12px;
+}
+
+.overview-data {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 </style>

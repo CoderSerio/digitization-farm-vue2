@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { reqMockTableData } from "@/api";
 import * as echarts from "echarts";
 import {
   echarts1Option,
@@ -51,40 +50,28 @@ export default {
   },
   methods: {
     getEcharts1() {
-      reqMockTableData().then(({ data }) => {
-        const echarts1 = echarts.init(this.$refs.echarts1);
-        echarts1.setOption(echarts1Option);
-      });
+      const echarts1 = echarts.init(this.$refs.echarts1);
+      echarts1.setOption(echarts1Option);
     },
     getEcharts2() {
-      reqMockTableData().then(({ data }) => {
-        const echarts2 = echarts.init(this.$refs.echarts2);
-        echarts2.setOption(echarts2Option);
-      });
+      const echarts2 = echarts.init(this.$refs.echarts2);
+      echarts2.setOption(echarts2Option);
     },
     getEcharts3() {
-      reqMockTableData().then(({ data }) => {
-        const echarts3 = echarts.init(this.$refs.echarts3);
-        echarts3.setOption(echarts3Option);
-      });
+      const echarts3 = echarts.init(this.$refs.echarts3);
+      echarts3.setOption(echarts3Option);
     },
     getEcharts4() {
-      reqMockTableData().then(({ data }) => {
-        const echarts4 = echarts.init(this.$refs.echarts4);
-        echarts4.setOption(echarts4Option);
-      });
+      const echarts4 = echarts.init(this.$refs.echarts4);
+      echarts4.setOption(echarts4Option);
     },
     getEcharts5() {
-      reqMockTableData().then(({ data }) => {
-        const echarts5 = echarts.init(this.$refs.echarts5);
-        echarts5.setOption(echarts5Option);
-      });
+      const echarts5 = echarts.init(this.$refs.echarts5);
+      echarts5.setOption(echarts5Option);
     },
     getEcharts6() {
-      reqMockTableData().then(({ data }) => {
-        const echarts6 = echarts.init(this.$refs.echarts6);
-        echarts6.setOption(echarts6Option);
-      });
+      const echarts6 = echarts.init(this.$refs.echarts6);
+      echarts6.setOption(echarts6Option);
     },
   },
 };

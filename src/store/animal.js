@@ -1,4 +1,3 @@
-import { reqMockTableData } from '@/api'
 const state = {
     isCollapse: false,//控制菜单展开还是收起
     tabsList: [
@@ -18,41 +17,41 @@ const state = {
         }],
     tableData: []
     //面包屑的数据 
-}
+};
 const mutations = {
     COLLAPSEMENU(state) {
-        state.isCollapse = !state.isCollapse
+        state.isCollapse = !state.isCollapse;
     },
     ADDROUTER(state, value) {
         if (value.name !== 'threemessage') {
-            const index = state.tabsList.findIndex(item => item === value)
+            const index = state.tabsList.findIndex(item => item === value);
             if (index === -1) {
-                state.tabsList.push(value)
+                state.tabsList.push(value);
             }
         }
     },
     DELETETAG(state, value) {
-        const index = state.tabsList.findIndex(item => item === value)
-        state.tabsList.splice(index, 1)
+        const index = state.tabsList.findIndex(item => item === value);
+        state.tabsList.splice(index, 1);
     },
     GETTABLEDATA(state, value) {
-        state.tableData = value
+        state.tableData = value;
         // console.log(state.tableData);
     }
-}
+};
 const actions = {
     async getTableData({ commit }) {
-        let result = await reqMockTableData();
+        let result = {};
         // console.log(result);
         if (result.data.code == 200) {
-            commit("GETTABLEDATA", result.data.data)
-            return 'ok'
+            commit("GETTABLEDATA", result.data.data);
+            return 'ok';
         } else {
-            return Promise.reject(new Error('fail'))
+            return Promise.reject(new Error('fail'));
         }
     }
-}
-const getters = {}
+};
+const getters = {};
 export default {
     state, mutations, actions, getters
-}
+};
