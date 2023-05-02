@@ -5,7 +5,7 @@
         <div class="content">
           <div class="temperature">
             <div>时间：</div>
-            <div>{{ date }}</div>
+            <div>{{ dayjs(date).format("YYYY MM DD HH:mm:ss") }}</div>
             <div>位置：</div>
             <div
               :style="{
@@ -90,6 +90,7 @@ import messageData from "@/mock/messageData";
 import statisticsData from "@/mock/statisticsData";
 import overviewData from "@/mock/overviewData";
 import { tableColumns } from "./config";
+import dayjs from "dayjs";
 
 export default {
   name: "info-cards",
@@ -104,6 +105,7 @@ export default {
       statisticsData,
       overviewData,
       tableColumns,
+      dayjs,
     };
   },
   props: ["chosenModel"],
