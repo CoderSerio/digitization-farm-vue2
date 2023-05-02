@@ -1,5 +1,10 @@
 <template>
-  <el-table :data="tableData" border style="width: 100%" height="100vh">
+  <el-table
+    :data="tableData"
+    border
+    style="width: 100%"
+    height="calc(100vh - 40px)"
+  >
     <el-table-column
       v-for="col in tableColumns"
       :key="col.prop"
@@ -18,7 +23,8 @@
 </template>
 
 <script>
-import { tableData, tableColumns } from "./config";
+import { tableColumns } from "./config";
+import tableData from "@/mock/tableListData";
 
 export default {
   name: "TablePage",

@@ -1,3 +1,4 @@
+import { reqMockTableData } from '@/api';
 const state = {
     isCollapse: false,//控制菜单展开还是收起
     tabsList: [
@@ -41,7 +42,7 @@ const mutations = {
 };
 const actions = {
     async getTableData({ commit }) {
-        let result = {};
+        let result = await reqMockTableData();
         // console.log(result);
         if (result.data.code == 200) {
             commit("GETTABLEDATA", result.data.data);

@@ -9,7 +9,7 @@ export const tableColumns = [
     label: '性别',
   },
   {
-    prop: 'ageStatus',
+    prop: 'ageStage',
     label: '生长周期',
   },
 ];

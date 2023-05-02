@@ -47,12 +47,21 @@
       <div class="column left">
         <div class="content">
           <div class="table">
-            <el-table :data="tableData" border style="width: 100%" height="180">
+            <el-table
+              :row-class-name="() => 'table-row-style'"
+              :show-header="false"
+              :highlight-current-row="false"
+              :setCurrentRow="() => ''"
+              :data="statisticsData[chosenModel?.object?.name]?.itemList"
+              height="172"
+            >
+              <el-table-column type="index" width="50" />
               <el-table-column
                 v-for="col in tableColumns"
                 :key="col.prop"
                 :prop="col.prop"
                 :label="col.label"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   {{
@@ -66,18 +75,24 @@
           </div>
         </div>
       </div>
-      <!-- <div class="column right"></div> -->
+      <!-- <div class="column right">
+        <div>{{ chosenModel?.object?.name }}</div>
+        <div>
+          {{ statisticsData[chosenModel?.object?.name] }}
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import messageData from "@/mock/messageData";
-import infoData from "@/mock/infoData";
+import statisticsData from "@/mock/statisticsData";
 import overviewData from "@/mock/overviewData";
-import { tableColumns } from "@/pages/Table/config";
+import { tableColumns } from "./config";
 
 export default {
+  name: "info-cards",
   mounted() {
     this.getTemperatureWarningItem();
   },
@@ -86,10 +101,9 @@ export default {
       date: new Date(),
       temperatureWarningItem: null,
       messageData,
-      infoData,
+      statisticsData,
       overviewData,
       tableColumns,
-      tableData: [],
     };
   },
   props: ["chosenModel"],
@@ -107,9 +121,6 @@ export default {
         }
       });
     },
-  },
-  watch() {
-    // TODO: 监听一下choseModel的变化
   },
 };
 </script>
@@ -133,7 +144,7 @@ export default {
     .column {
       width: 520px;
       height: 240px;
-      background: url("../../../assets/3d/信息背景.png");
+      background: url("../../../../assets/3d/信息背景.png");
       background-size: cover;
       margin: 10px 0 64px;
       position: relative;
@@ -145,6 +156,7 @@ export default {
         width: calc(100% - 44px);
         height: calc(100% - 40px);
         padding: 10px;
+        pointer-events: auto;
       }
     }
   }
@@ -163,5 +175,20 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+.el-table {
+  background-color: transparent;
+}
+</style>
+
+<style>
+.table-row-style {
+  background-color: transparent !important;
+  color: #fff;
+}
+
+.el-table tbody tr:hover > td {
+  background: transparent !important;
+  cursor: pointer;
 }
 </style>

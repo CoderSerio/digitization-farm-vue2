@@ -1,4 +1,4 @@
-// 右上角的动物信息总览
+// 3D, 右上角的动物信息总览
 export default {
   pig: {
     totalNum: 1000,
@@ -13,3 +13,4 @@ export default {
     healthyNum: 800,
   }
 };
+

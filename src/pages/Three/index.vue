@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <three-info-cards :chosenModel="chosenModel"></three-info-cards>
+    <info-cards :chosenModel="chosenModel"></info-cards>
     <div id="three"></div>
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
 import * as THREE from "three";
 import messageData from "@/mock/messageData";
-import ThreeInfoCards from "./components/ThreeInfoCards.vue";
+import InfoCards from "./components/InfoCards/index.vue";
 import {
   createCamera,
   createLight,
@@ -213,6 +213,10 @@ export default {
             <img src=${require("@/assets/3d/温度.png")} />
              <div>${data?.temperature}℃</div>
           </div>
+          <div class="humidity">
+            <img src=${require("@/assets/3d/湿度.png")} />
+             <div>${data?.humidity}%</div>
+          </div>
         </div>
         <div class="info-card-content">
           <img src=${data?.grainImg} />
@@ -226,7 +230,7 @@ export default {
     },
   },
   components: {
-    ThreeInfoCards,
+    InfoCards,
   },
 };
 </script>
@@ -234,7 +238,7 @@ export default {
 <style lang="less">
 .info-card {
   box-sizing: border-box;
-  width: 327px;
+  width: 390px;
   height: 243px;
   background: url("../../assets/3d/信息背景.png");
   background-size: cover;
@@ -243,18 +247,20 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
   padding: 32px 0;
+  overflow: hidden;
 
   &-title {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    gap: 24px;
-
+    gap: 12px;
+    .humidity,
     .temperature {
       display: flex;
       align-items: center;
+      gap: 2px;
       img {
         height: 36px;
       }
