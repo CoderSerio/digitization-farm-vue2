@@ -10,10 +10,10 @@ import { Water } from 'three/examples/jsm/objects/Water';
 import waterTexture from '@/assets/images/water.jpg';
 
 /** 创建场景 */
-export const createScence = () => {
-  const scence = new THREE.Scene;
-  scence.fog = new THREE.Fog(0x005577, -100, 1300);
-  return scence;
+export const createscene = () => {
+  const scene = new THREE.Scene;
+  scene.fog = new THREE.Fog(0x005577, -100, 1300);
+  return scene;
 };
 
 /** 创建并添加光源 */
@@ -60,7 +60,7 @@ export const createRenderer = () => {
 };
 
 /** 创建环境，天空、海水、太阳 */
-export const initEnvironment = (scence, renderer) => {
+export const initEnvironment = (scene, renderer) => {
   const sky = new Sky();
   sky.scale.setScalar(10000);
   const skyUniforms = sky.material.uniforms;
@@ -80,7 +80,7 @@ export const initEnvironment = (scence, renderer) => {
     sunColor: 0xffffff,
     waterColor: 0x0072ff,
     distortionScale: 4,
-    fog: scence.fog !== undefined
+    fog: scene.fog !== undefined
   });
   water.rotation.x = - Math.PI / 2;
   water.position.y -= 20;
@@ -92,23 +92,23 @@ export const initEnvironment = (scence, renderer) => {
   sun.setFromSphericalCoords(1, phi, theta);
   sky.material.uniforms['sunPosition'].value.copy(sun);
   water.material.uniforms['sunDirection'].value.copy(sun).normalize();
-  scence.environment = pmremGenerator.fromScene(sky).texture;
+  scene.environment = pmremGenerator.fromScene(sky).texture;
 
-  scence.add(water);
-  scence.add(sky);
+  scene.add(water);
+  scene.add(sky);
 };
 
 
 /** 让所有渲染器进行渲染 */
-export const render = (renderersSet, scence, camera) => {
+export const render = (renderersSet, scene, camera) => {
   renderersSet?.forEach((renderer) => {
-    renderer.render(scence, camera);
+    renderer.render(scene, camera);
   });
 };
 
 
 /** 导入GLTF文件 (默认文件自带材质路径，不去手动加载) */
-export const loadGLTF = (scence, modelPath, options, callback) => {
+export const loadGLTF = (scene, modelPath, options, callback) => {
   const loader = new THREE.ImageLoader();
   loader.setCrossOrigin('Anonymous'); // 解决跨域问题
 
@@ -140,7 +140,7 @@ export const createCss2dRenderer = () => {
 };
 
 /** 导入css2d对象 */
-export const loadCss2dObject = (scence, htmlContent, options) => {
+export const loadCss2dObject = (scene, htmlContent, options) => {
   const el = document.createElement('div');
   el.innerHTML = `<div class="tag">${htmlContent}</div>`;
 
@@ -151,12 +151,12 @@ export const loadCss2dObject = (scence, htmlContent, options) => {
     options.position?.z || 0
   );
 
-  scence.add(css2dObject);
+  scene.add(css2dObject);
   return css2dObject;
 };
 
 /** 创建动画效果，如火焰 */
-export const createAnimation = (scence, texturePth, fragmentNum, options) => {
+export const createAnimation = (scene, texturePth, fragmentNum, options) => {
   const geometry = new THREE.PlaneGeometry(
     options.scale ?? 10,
     options.scale ?? 10
@@ -188,7 +188,7 @@ export const createAnimation = (scence, texturePth, fragmentNum, options) => {
     mesh.clone().rotateY((Math.PI / 4) * 3)
   );
 
-  scence.add(group);
+  scene.add(group);
 
   let time = 0;
   /** 控制动画的更新，包括显示与否 */
@@ -210,16 +210,16 @@ export const createAnimation = (scence, texturePth, fragmentNum, options) => {
 };
 
 /** 添加控制，如鼠标操作等 */
-export const createControls = (scence, camera, renderer, callback) => {
+export const createControls = (scene, camera, renderer, callback) => {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener('change', () => {
-    // renderer.render(scence, camera);
-    callback?.(scence, camera);
+    // renderer.render(scene, camera);
+    callback?.(scene, camera);
   });
 };
 
 /** 射线点击，获取射线穿透的所有物体 */
-export const get3dClickEventTargets = (scence, camera, event) => {
+export const get3dClickEventTargets = (scene, camera, event) => {
   const meshArr = [];
   const pointer = new THREE.Vector2();
 
@@ -228,7 +228,7 @@ export const get3dClickEventTargets = (scence, camera, event) => {
   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
 
-  scence.children?.forEach((child) => {
+  scene.children?.forEach((child) => {
     if (child.isObject3D) {
       meshArr.push(child);
     }

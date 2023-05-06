@@ -13,7 +13,7 @@ import {
   createCamera,
   createLight,
   createRenderer,
-  createScence,
+  createscene,
   createCss2dRenderer,
   loadGLTF,
   createControls,
@@ -31,7 +31,7 @@ export default {
     return {
       isLoading: false,
       camera: null,
-      scence: null,
+      scene: null,
       light: null,
       environment: null,
       renderer: null,
@@ -49,22 +49,22 @@ export default {
 
       // 初始化各种场景参数
       this.camera = createCamera();
-      this.scence = createScence();
+      this.scene = createscene();
       this.light = createLight();
       this.renderer = createRenderer();
       this.css2dRenderer = createCss2dRenderer();
 
       // 导入光源
-      this.scence.add(this.light.ambientLight);
-      this.scence.add(this.light.dirLight);
-      this.scence.add(this.environment);
+      this.scene.add(this.light.ambientLight);
+      this.scene.add(this.light.dirLight);
+      this.scene.add(this.environment);
 
       // 创建环境(低配机慎重考虑)
-      // initEnvironment(this.scence, this.renderer);
+      // initEnvironment(this.scene, this.renderer);
 
       // 导入动画(火焰)
       this.updateAnimation = createAnimation(
-        this.scence,
+        this.scene,
         "static/images/flame.png",
         15,
         {
@@ -80,7 +80,7 @@ export default {
 
       // 导入模型文件(并且决定是否显示动画火焰)
       loadGLTF(
-        this.scence,
+        this.scene,
         `static/model/model.glb`,
         { scale: 2 },
         (gltf, model) => {
@@ -116,7 +116,7 @@ export default {
           });
           model.add(gltf.scene);
 
-          that.scence.add(model);
+          that.scene.add(model);
         }
       );
 
@@ -130,12 +130,12 @@ export default {
 
       // 添加事件控制
       createControls(
-        this.scence,
+        this.scene,
         this.camera,
         this.renderer,
-        (scence, camera) => {
-          that.renderer.render(scence, camera);
-          that.css2dRenderer.render(scence, camera);
+        (scene, camera) => {
+          that.renderer.render(scene, camera);
+          that.css2dRenderer.render(scene, camera);
         }
       );
 
@@ -144,8 +144,8 @@ export default {
     },
     render3d() {
       const that = this;
-      this.renderer?.render(this.scence, this.camera);
-      this.css2dRenderer?.render(this.scence, this.camera);
+      this.renderer?.render(this.scene, this.camera);
+      this.css2dRenderer?.render(this.scene, this.camera);
       window.requestAnimationFrame(that.render3d);
     },
     handle3dClick(event) {
@@ -153,7 +153,7 @@ export default {
       this.isLoading = true;
 
       const that = this;
-      const targets = get3dClickEventTargets(this.scence, this.camera, event);
+      const targets = get3dClickEventTargets(this.scene, this.camera, event);
       const target = targets?.[0];
 
       // 保证是个仓库才继续操作
@@ -169,7 +169,7 @@ export default {
       // 如果还没有信息卡片那就创建一个
       if (!this.clickInfoCard) {
         this.clickInfoCard = loadCss2dObject(
-          that.scence,
+          that.scene,
           that.getInfoCardHtml(target),
           {}
         );

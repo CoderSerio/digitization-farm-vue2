@@ -27,13 +27,14 @@
 <script>
 import * as echarts from "echarts";
 import {
-  echarts1Option,
-  echarts2Option,
-  echarts3Option,
-  echarts4Option,
-  echarts5Option,
-  echarts6Option,
+  getOption1,
+  getOption2,
+  getOption3,
+  getOption4,
+  getOption5,
+  getOption6,
 } from "./config";
+import echartsData from "@/mock/echartsData";
 
 export default {
   name: "echart-page",
@@ -51,27 +52,27 @@ export default {
   methods: {
     getEcharts1() {
       const echarts1 = echarts.init(this.$refs.echarts1);
-      echarts1.setOption(echarts1Option);
+      echarts1.setOption(getOption1(echartsData.data1));
     },
     getEcharts2() {
       const echarts2 = echarts.init(this.$refs.echarts2);
-      echarts2.setOption(echarts2Option);
+      echarts2.setOption(getOption2(echartsData.data2));
     },
     getEcharts3() {
       const echarts3 = echarts.init(this.$refs.echarts3);
-      echarts3.setOption(echarts3Option);
+      echarts3.setOption(getOption3(echartsData.data3));
     },
     getEcharts4() {
       const echarts4 = echarts.init(this.$refs.echarts4);
-      echarts4.setOption(echarts4Option);
+      echarts4.setOption(getOption4(echartsData.data4));
     },
     getEcharts5() {
       const echarts5 = echarts.init(this.$refs.echarts5);
-      echarts5.setOption(echarts5Option);
+      echarts5.setOption(getOption5(echartsData.data5));
     },
     getEcharts6() {
       const echarts6 = echarts.init(this.$refs.echarts6);
-      echarts6.setOption(echarts6Option);
+      echarts6.setOption(getOption6(echartsData.data6));
     },
   },
 };

@@ -7,6 +7,7 @@
 <script>
 import routes from "@/router/route";
 export default {
+  name: "layout-component",
   data() {
     return {
       routes,
