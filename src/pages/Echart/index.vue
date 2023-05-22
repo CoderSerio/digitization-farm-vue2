@@ -34,45 +34,56 @@ import {
   getOption5,
   getOption6,
 } from "./config";
-import echartsData from "@/mock/echartsData";
+// import echartsData from "@/mock/echartsData";
+import { getEchartsData } from "@/api/index";
 
 export default {
   name: "echart-page",
   data() {
-    return {};
+    return {
+      echartsData: {},
+    };
   },
   mounted() {
-    this.getEcharts1();
-    this.getEcharts2();
-    this.getEcharts3();
-    this.getEcharts4();
-    this.getEcharts5();
-    this.getEcharts6();
+    const that = this;
+    getEchartsData().then((res) => {
+      that.echartsData = res;
+    });
+  },
+  watch: {
+    echartsData() {
+      this.getEcharts1();
+      this.getEcharts2();
+      this.getEcharts3();
+      this.getEcharts4();
+      this.getEcharts5();
+      this.getEcharts6();
+    },
   },
   methods: {
     getEcharts1() {
       const echarts1 = echarts.init(this.$refs.echarts1);
-      echarts1.setOption(getOption1(echartsData.data1));
+      echarts1.setOption(getOption1(this.echartsData?.data1));
     },
     getEcharts2() {
       const echarts2 = echarts.init(this.$refs.echarts2);
-      echarts2.setOption(getOption2(echartsData.data2));
+      echarts2.setOption(getOption2(this.echartsData.data2));
     },
     getEcharts3() {
       const echarts3 = echarts.init(this.$refs.echarts3);
-      echarts3.setOption(getOption3(echartsData.data3));
+      echarts3.setOption(getOption3(this.echartsData.data3));
     },
     getEcharts4() {
       const echarts4 = echarts.init(this.$refs.echarts4);
-      echarts4.setOption(getOption4(echartsData.data4));
+      echarts4.setOption(getOption4(this.echartsData.data4));
     },
     getEcharts5() {
       const echarts5 = echarts.init(this.$refs.echarts5);
-      echarts5.setOption(getOption5(echartsData.data5));
+      echarts5.setOption(getOption5(this.echartsData.data5));
     },
     getEcharts6() {
       const echarts6 = echarts.init(this.$refs.echarts6);
-      echarts6.setOption(getOption6(echartsData.data6));
+      echarts6.setOption(getOption6(this.echartsData.data6));
     },
   },
 };

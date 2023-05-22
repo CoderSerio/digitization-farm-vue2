@@ -10,7 +10,7 @@ import { Water } from 'three/examples/jsm/objects/Water';
 import waterTexture from '@/assets/images/water.jpg';
 
 /** 创建场景 */
-export const createscene = () => {
+export const createScene = () => {
   const scene = new THREE.Scene;
   scene.fog = new THREE.Fog(0x005577, -100, 1300);
   return scene;
@@ -156,14 +156,14 @@ export const loadCss2dObject = (scene, htmlContent, options) => {
 };
 
 /** 创建动画效果，如火焰 */
-export const createAnimation = (scene, texturePth, fragmentNum, options) => {
+export const createAnimation = (scene, texturePath, fragmentNum, options) => {
   const geometry = new THREE.PlaneGeometry(
     options.scale ?? 10,
     options.scale ?? 10
   );
 
   const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load(texturePth);
+  const texture = textureLoader.load(texturePath);
   texture.repeat.set(1 / fragmentNum, 1);
 
   const material = new THREE.MeshBasicMaterial({

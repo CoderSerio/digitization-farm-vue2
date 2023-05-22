@@ -24,13 +24,20 @@
 
 <script>
 import { tableColumns } from "./config";
-import tableData from "@/mock/tableListData";
+// import tableData from "@/mock/tableListData";
+import { getTableListData } from "@/api/index";
 
 export default {
   name: "TablePage",
+  mounted() {
+    const that = this;
+    getTableListData().then((res) => {
+      that.tableData = res ?? [];
+    });
+  },
   data() {
     return {
-      tableData,
+      tableData: [],
       tableColumns,
     };
   },

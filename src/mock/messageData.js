@@ -42,7 +42,7 @@ export default {
     },
     L_05: {
         granaryName: "抗生素厂 L_05",
-        temperature: "33.8",
+        temperature: "12",
         humidity: "20",
         grain: "抗生素C",
         grainImg: require("@/assets/3d/bean/红豆.png"),
@@ -202,7 +202,7 @@ export default {
     },
     P_03: {
         granaryName: "养殖场 P_03",
-        temperature: "33.2",
+        temperature: "332",
         humidity: "20",
         grain: "牛",
         grainImg: require("@/assets/3d/animal/cow.jpg"),

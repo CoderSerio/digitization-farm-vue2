@@ -7,13 +7,13 @@
 
 <script>
 import * as THREE from "three";
-import messageData from "@/mock/messageData";
+import { getMessageData } from "@/api/index";
 import InfoCards from "./components/InfoCards/index.vue";
 import {
   createCamera,
   createLight,
   createRenderer,
-  createscene,
+  createScene,
   createCss2dRenderer,
   loadGLTF,
   createControls,
@@ -25,7 +25,11 @@ import {
 export default {
   name: "three-page",
   mounted() {
-    this.init3D();
+    const that = this;
+    getMessageData().then((res) => {
+      that.messageData = res;
+      this.init3D();
+    });
   },
   data() {
     return {
@@ -38,7 +42,7 @@ export default {
       css2dRenderer: null,
       clickInfoCard: null, // 信息卡片,
       chosenModel: null, // 当前选中的模型
-      messageData: messageData, // 仓库数据（不知道为什么叫messageData
+      messageData: null, // 仓库数据（不知道为什么叫messageData
       timeId: 0, // 全局唯一的计时器id
       updateAnimation: null, // 动画更新函数（火焰动画）
     };
@@ -49,7 +53,7 @@ export default {
 
       // 初始化各种场景参数
       this.camera = createCamera();
-      this.scene = createscene();
+      this.scene = createScene();
       this.light = createLight();
       this.renderer = createRenderer();
       this.css2dRenderer = createCss2dRenderer();
@@ -59,24 +63,8 @@ export default {
       this.scene.add(this.light.dirLight);
       this.scene.add(this.environment);
 
-      // 创建环境(低配机慎重考虑)
+      // 开启光影环境(低配机慎重考虑)
       // initEnvironment(this.scene, this.renderer);
-
-      // 导入动画(火焰)
-      this.updateAnimation = createAnimation(
-        this.scene,
-        "static/images/flame.png",
-        15,
-        {
-          position: {
-            z: 0,
-            y: 50,
-          },
-          scale: 50,
-        }
-      );
-      // 隐藏动画(火焰)
-      this.updateAnimation(false);
 
       // 导入模型文件(并且决定是否显示动画火焰)
       loadGLTF(
@@ -100,10 +88,17 @@ export default {
 
           group.traverse(function (obj) {
             if (obj.type === "Mesh") {
-              const temperature = that.messageData[obj?.name].temperature;
+              const temperature = that.messageData?.[obj?.name]?.temperature;
               if (+temperature >= 50) {
-                // 播放火焰动画
-                that.updateAnimation(true, {
+                // 导入动画(火焰)
+                createAnimation(that.scene, "static/images/flame.png", 15, {
+                  position: {
+                    x: obj.position.x,
+                    y: obj.position.y,
+                    z: obj.position.z,
+                  },
+                  scale: 50,
+                })(true, {
                   position: {
                     x: obj.position.x,
                     y: obj.position.y,
@@ -185,7 +180,7 @@ export default {
     // 生成点击卡片的内容
     getInfoCardHtml(model) {
       const that = this;
-      const data = this.messageData[model?.name];
+      const data = this.messageData?.[model?.name];
       let dynamicWeight = 0;
 
       // 实现一个动态的数值加载（看着就很消耗性能

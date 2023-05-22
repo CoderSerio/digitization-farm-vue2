@@ -9,12 +9,12 @@
             <div>位置：</div>
             <div
               :style="{
-                color: temperatureWarningItem.granaryName ? 'red' : '#fff',
+                color: temperatureWarningItem?.granaryName ? 'red' : '#fff',
               }"
             >
               {{
-                temperatureWarningItem.granaryName
-                  ? `${temperatureWarningItem.granaryName}温度异常，失火报警！！！`
+                temperatureWarningItem?.granaryName
+                  ? `${temperatureWarningItem?.granaryName}温度异常，失火报警！！！`
                   : "一切正常"
               }}
             </div>
@@ -25,18 +25,19 @@
         <div class="content">
           <div class="overview-data">
             <li>
-              猪一共有{{ overviewData?.pig?.totalNum }}只， 其中健康个体有{{
-                overviewData?.pig?.healthyNum
-              }}只
+              猪一共有{{ overviewData?.pig?.totalNum ?? "--" }}只，
+              其中健康个体有{{ overviewData?.pig?.healthyNum ?? "--" }}只
             </li>
             <li>
-              牛一共有{{ overviewData?.cow?.totalNum }}只，其中健康个体有{{
-                overviewData?.cow?.healthyNum
-              }}只
+              牛一共有{{
+                overviewData?.cow?.totalNum ?? "--"
+              }}只，其中健康个体有{{ overviewData?.cow?.healthyNum ?? "--" }}只
             </li>
             <li>
-              羊一共有{{ overviewData?.sheep?.totalNum }}只，其中健康个体有{{
-                overviewData?.sheep?.healthyNum
+              羊一共有{{
+                overviewData?.sheep?.totalNum ?? "--"
+              }}只，其中健康个体有{{
+                overviewData?.sheep?.healthyNum ?? "--"
               }}只
             </li>
           </div>
@@ -86,24 +87,36 @@
 </template>
 
 <script>
-import messageData from "@/mock/messageData";
-import statisticsData from "@/mock/statisticsData";
-import overviewData from "@/mock/overviewData";
+// import messageData from "@/mock/messageData";
+// import statisticsData from "@/mock/statisticsData";
+// import overviewData from "@/mock/overviewData";
+import { getOverviewData, getMessageData, getStatisticsData } from "@/api";
+
 import { tableColumns } from "./config";
 import dayjs from "dayjs";
 
 export default {
   name: "info-cards",
   mounted() {
+    const that = this;
     this.getTemperatureWarningItem();
+    getOverviewData().then((res) => {
+      that.overviewData = res;
+    });
+    getMessageData().then((res) => {
+      that.statisticsData = res;
+    });
+    getStatisticsData().then((res) => {
+      that.statisticsData = res;
+    });
   },
   data() {
     return {
       date: new Date(),
       temperatureWarningItem: null,
-      messageData,
-      statisticsData,
-      overviewData,
+      messageData: "",
+      statisticsData: "",
+      overviewData: "",
       tableColumns,
       dayjs,
     };
