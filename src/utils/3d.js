@@ -175,6 +175,7 @@ export const createAnimation = (scene, texturePath, fragmentNum, options) => {
   });
   const mesh = new THREE.Mesh(geometry, material);
   const group = new THREE.Group();
+  group.name = options.name
   group.position.set(
     options.position?.x || 0,
     options.position?.y || 0,
@@ -217,6 +218,7 @@ export const createControls = (scene, camera, renderer, callback) => {
     callback?.(scene, camera);
   });
 };
+
 
 /** 射线点击，获取射线穿透的所有物体 */
 export const get3dClickEventTargets = (scene, camera, event) => {

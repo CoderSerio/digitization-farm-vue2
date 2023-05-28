@@ -2,11 +2,11 @@
 export default {
   pig: {
     totalNum: 1000,
-    healthyNum: 800,
+    healthyNum: 900,
   },
   sheep: {
     totalNum: 1000,
-    healthyNum: 800,
+    healthyNum: 850,
   },
   cow: {
     totalNum: 1000,

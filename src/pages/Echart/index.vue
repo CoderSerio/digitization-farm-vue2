@@ -10,9 +10,9 @@
       <div class="panel-footer"></div>
     </div>
 
-    <div ref="echarts2">
+    <!-- <div ref="echarts2">
       <div class="panel-footer"></div>
-    </div>
+    </div> -->
 
     <div class="line" ref="echarts3">
       <div class="panel-footer"></div>
@@ -28,7 +28,7 @@
 import * as echarts from "echarts";
 import {
   getOption1,
-  getOption2,
+  // getOption2,
   getOption3,
   getOption4,
   getOption5,
@@ -46,14 +46,15 @@ export default {
   },
   mounted() {
     const that = this;
-    getEchartsData().then((res) => {
-      that.echartsData = res;
-    });
+    this.getData();
+    setInterval(() => {
+      this.getData();
+    }, 30000);
   },
   watch: {
     echartsData() {
       this.getEcharts1();
-      this.getEcharts2();
+      // this.getEcharts2();
       this.getEcharts3();
       this.getEcharts4();
       this.getEcharts5();
@@ -61,6 +62,12 @@ export default {
     },
   },
   methods: {
+    getData() {
+      getEchartsData().then((res) => {
+        this.echartsData = res.data[0].data;
+        console.log(res);
+      });
+    },
     getEcharts1() {
       const echarts1 = echarts.init(this.$refs.echarts1);
       echarts1.setOption(getOption1(this.echartsData?.data1));
@@ -160,7 +167,7 @@ export default {
     }
   }
   & > div.pie {
-    width: 15%;
+    width: 30%;
   }
   & > div.line {
     width: 48%;

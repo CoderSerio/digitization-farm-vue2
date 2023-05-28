@@ -20,7 +20,8 @@ router.get('/getEchartsData', (req, res) => {
 router.get('/getMessageData', (req, res) => {
   messageDao.getMessageData((data) => {
     console.log(data);
-    res.send(data);
+    const value = data?.[0]?.data
+    res.send(value);
   });
 });
 

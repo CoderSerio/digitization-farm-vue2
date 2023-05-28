@@ -25,11 +25,82 @@ import {
 export default {
   name: "three-page",
   mounted() {
-    const that = this;
-    getMessageData().then((res) => {
-      that.messageData = res;
-      this.init3D();
+    // console.log();
+    // const that = this;
+    // getMessageData().then((res) => {
+    //   that.messageData = res.data;
+    //   // console.log(res.data);
+    //   this.init3D();
+    // });
+
+    this.getData();
+    this.init3D();
+    console.log(this.scene);
+    // this.test2();
+    // this.removeInit();
+    // this.test2();
+    // this.scene.remove(Group);
+    // const group2 = this.scene.children;
+    // console.log(group2);
+    // this.scene.children.group = group2;
+    // this.scene.children.length = 0;
+    // this.scene.children = null;
+    // console.log(this.scene);
+    // const nameNode = this.scene.getObjectByName("Scene");
+    // this.scene.remove(nameNode);
+    // 存在bug
+    // this.removeInit();
+    // console.log(this.scene.children);
+    // this.scene.remove(scene.children[0]);
+    // console.log(this.scene);
+    // this.scene.children.map((item, index, self) => {
+    //   console.log(self[index]);
+    //   this.scene.remove(self[index]);
+    //   console.log(this.scene);
+    // });
+    // console.log(this.scene.children[0]);
+
+    // 能实现但是不好看
+    // setInterval(() => {
+    //   this.getData();
+    // }, interval);
+    // this.timer = setInterval(() => {
+    // this.clearScene();
+    // this.init3D();
+    // this.getData();
+
+    this.$nextTick(() => {
+      // var deleteElement = document.getElementById("three");
+      // deleteElement.parentNode.removeChild(deleteElement);
+      // // 创建一个新的div元素
+      // const newDiv = document.createElement("div");
+      // const wrapper = document.querySelector(".wrapper");
+      // // 给新的div元素添加类名
+      // newDiv.setAttribute("id", "three");
+      // // 将新的div元素添加到body元素中
+      // wrapper.appendChild(newDiv);
+      // this.isLoading = false;
+      //可行代码部分
+      // this.deleteElement();
+      // this.addElement();
+      // this.clickInfoCard = false;
+      // this.chosenModel = null;
+      // this.getData();
+      // this.init3D();
+      this.startElementTimer();
+      // document.addEventListener("click", this.handle3dClick);
     });
+    // this.css2dRenderer = createCss2dRenderer();
+    // const el = document.getElementById("three");
+    // el?.appendChild(this.renderer.domElement);
+    // el?.appendChild(this.css2dRenderer.domElement);
+    // this.render3d();
+    // }, 5000);
+  },
+  beforeDestroy() {
+    console.log(111);
+    clearInterval(this.timer);
+    this.timer = null;
   },
   data() {
     return {
@@ -45,9 +116,137 @@ export default {
       messageData: null, // 仓库数据（不知道为什么叫messageData
       timeId: 0, // 全局唯一的计时器id
       updateAnimation: null, // 动画更新函数（火焰动画）
+      timer: null,
     };
   },
   methods: {
+    startElementTimer() {
+      this.timer = setInterval(() => {
+        // 定时器要做的
+        this.$nextTick(() => {
+          this.clearScene();
+          this.allOption();
+          // 取消定时器
+          clearInterval(this.timer);
+          // 重新启动定时器
+          this.timer = setInterval(() => {
+            this.startElementTimer();
+            console.log("30s动一次");
+          }, 30000);
+        });
+      }, 5000);
+    },
+    allOption() {
+      var deleteElement = document.getElementById("three");
+      deleteElement.parentNode.removeChild(deleteElement);
+      // 创建一个新的div元素
+      const newDiv = document.createElement("div");
+      const wrapper = document.querySelector(".wrapper");
+      // 给新的div元素添加类名
+      newDiv.setAttribute("id", "three");
+      // 将新的div元素添加到body元素中
+      wrapper.appendChild(newDiv);
+      this.isLoading = false;
+      this.clickInfoCard = false;
+      this.chosenModel = null;
+      this.getData();
+      this.init3D();
+      // console.log("a");
+      console.log(this.scene);
+    },
+    deleteElement() {
+      var deleteElement = document.getElementById("three");
+      deleteElement.parentNode.removeChild(deleteElement);
+      this.timer = null;
+    },
+    addElement() {
+      // 创建一个新的div元素
+      const newDiv = document.createElement("div");
+      const wrapper = document.querySelector(".wrapper");
+      // 给新的div元素添加类名
+      newDiv.setAttribute("id", "three");
+      // 将新的div元素添加到body元素中
+      wrapper.appendChild(newDiv);
+    },
+    test2() {
+      var data = this.scene.children;
+      console.log(11);
+      for (var i = data.length - 1; i >= 0; i--) {
+        if (data[i] instanceof THREE.Group) {
+          console.log(data[i]);
+          this.scene.remove(data[i]);
+        }
+      }
+    },
+    removeInit() {
+      this.scene.remove(
+        this.scene.children[3],
+        this.scene.children[2],
+        this.scene.children[1],
+        this.scene.children[0]
+      );
+      console.log(this.scene);
+    },
+    clearGroup(group) {
+      const clearCache = (item) => {
+        item.geometry.dispose();
+        item.material.dispose();
+      };
+      const removeObj = (obj) => {
+        let arr = obj.children.filter((x) => !!x);
+        arr.forEach((item) => {
+          if (item.children.length) {
+            removeObj(item);
+          } else {
+            clearCache(item);
+            item.clear();
+          }
+        });
+        obj.clear();
+        arr = null;
+      };
+      removeObj(group);
+    },
+    clearScene() {
+      cancelAnimationFrame(this.updateAnimation);
+      this.scene.traverse((child) => {
+        if (child.material) {
+          child.material.dispose();
+        }
+        if (child.geometry) {
+          child.geometry.dispose();
+        }
+        child = null;
+      });
+      // this.sceneDomElement.innerHTML = "";
+      this.renderer.forceContextLoss();
+      this.renderer.dispose();
+      // this.scene.remove(model);
+      this.scene.clear();
+      console.log(this.scene);
+      // this.flows = [];
+      this.scene = null;
+      this.camera = null;
+      this.controls = null;
+      // this.renderer.domElement = null;
+      this.renderer = null;
+      // this.sceneDomElement = null;
+      console.log("clearScene");
+    },
+
+    getData() {
+      // console.log(111);
+      getMessageData().then((res) => {
+        this.messageData = res.data;
+        // console.log(res.data);
+        // this.init3D();
+      });
+    },
+    remove() {
+      const that = this;
+      this.scene.remove(this.light.ambientLight);
+      this.scene.remove(this.light.dirLight);
+    },
     init3D() {
       const that = this;
 
@@ -61,7 +260,7 @@ export default {
       // 导入光源
       this.scene.add(this.light.ambientLight);
       this.scene.add(this.light.dirLight);
-      this.scene.add(this.environment);
+      // this.scene.add(this.environment);
 
       // 开启光影环境(低配机慎重考虑)
       // initEnvironment(this.scene, this.renderer);
@@ -85,11 +284,12 @@ export default {
           });
           // 所有粮仓模型的父对象名称：'粮仓'
           const group = gltf.scene.getObjectByName("粮仓");
-
+          // console.log(group);
           group.traverse(function (obj) {
             if (obj.type === "Mesh") {
+              // console.log(obj);
               const temperature = that.messageData?.[obj?.name]?.temperature;
-              if (+temperature >= 50) {
+              if (+temperature > 25) {
                 // 导入动画(火焰)
                 createAnimation(that.scene, "static/images/flame.png", 15, {
                   position: {
@@ -98,6 +298,7 @@ export default {
                     z: obj.position.z,
                   },
                   scale: 50,
+                  name: obj.name,
                 })(true, {
                   position: {
                     x: obj.position.x,
@@ -145,6 +346,7 @@ export default {
     },
     handle3dClick(event) {
       if (this.isLoading) return;
+      console.log(123);
       this.isLoading = true;
 
       const that = this;
@@ -180,6 +382,7 @@ export default {
     // 生成点击卡片的内容
     getInfoCardHtml(model) {
       const that = this;
+
       const data = this.messageData?.[model?.name];
       let dynamicWeight = 0;
 
@@ -193,6 +396,7 @@ export default {
           return;
         }
         dynamicWeight += Math.floor(data.weight / 50);
+        // dynamicWeight = data.weight;
         dynamic.innerHTML = `${dynamicWeight}`;
         if (dynamicWeight >= data?.weight) {
           dynamic.innerHTML = `${data.weight}`;
@@ -222,6 +426,14 @@ export default {
           <div>总空间—${data?.granarySize}m³</div>
         </div>
         </div>`;
+    },
+  },
+  watch: {
+    messageData: {
+      handler(newValue, oldValue) {
+        this.messageData = newValue;
+      },
+      deep: true,
     },
   },
   components: {

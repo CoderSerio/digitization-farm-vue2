@@ -31,15 +31,24 @@ export default {
   name: "TablePage",
   mounted() {
     const that = this;
-    getTableListData().then((res) => {
-      that.tableData = res ?? [];
-    });
+    this.getData();
+    setInterval(() => {
+      this.getData();
+    }, 30000);
   },
   data() {
     return {
       tableData: [],
       tableColumns,
     };
+  },
+  methods: {
+    getData() {
+      getTableListData().then((res) => {
+        console.log(res);
+        this.tableData = res.data[0].data ?? [];
+      });
+    },
   },
 };
 </script>

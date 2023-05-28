@@ -7,16 +7,37 @@
             <div>时间：</div>
             <div>{{ dayjs(date).format("YYYY MM DD HH:mm:ss") }}</div>
             <div>位置：</div>
-            <div
+            <!-- <div
+              v-for="(item, index) in errorList"
               :style="{
-                color: temperatureWarningItem?.granaryName ? 'red' : '#fff',
+                color: temperatureWarningItem.granaryName ? 'red' : '#fff',
               }"
-            >
-              {{
-                temperatureWarningItem?.granaryName
-                  ? `${temperatureWarningItem?.granaryName}温度异常，失火报警！！！`
+              :key="index"
+            > -->
+            <div v-for="(item, index) in errorList" :key="index">
+              <!-- {{
+                temperatureWarningItem.granaryName
+                  ? `${temperatureWarningItem.granaryName}温度异常，失火报警！！！`
                   : "一切正常"
               }}
+
+              {{
+                humidityWarningItem.granaryName
+                  ? `${humidityWarningItem.granaryName}湿度异常报警！！！`
+                  : "一切正常"
+              }} -->
+              <div
+                v-if="item.temperature > 25 || item.temperature < 20"
+                style="color: red"
+              >
+                {{ `${item.granaryName} 温度异常，尽快查看！！！` }}
+              </div>
+              <div
+                v-if="item.humidity > 75 || item.humidity < 50"
+                style="color: red"
+              >
+                {{ `${item.granaryName} 湿度异常，尽快查看！！！` }}
+              </div>
             </div>
           </div>
         </div>
@@ -25,19 +46,18 @@
         <div class="content">
           <div class="overview-data">
             <li>
-              猪一共有{{ overviewData?.pig?.totalNum ?? "--" }}只，
-              其中健康个体有{{ overviewData?.pig?.healthyNum ?? "--" }}只
+              猪一共有{{ overviewData?.pig?.totalNum }}只， 其中健康个体有{{
+                overviewData?.pig?.healthyNum
+              }}只
             </li>
             <li>
-              牛一共有{{
-                overviewData?.cow?.totalNum ?? "--"
-              }}只，其中健康个体有{{ overviewData?.cow?.healthyNum ?? "--" }}只
+              牛一共有{{ overviewData?.cow?.totalNum }}只，其中健康个体有{{
+                overviewData?.cow?.healthyNum
+              }}只
             </li>
             <li>
-              羊一共有{{
-                overviewData?.sheep?.totalNum ?? "--"
-              }}只，其中健康个体有{{
-                overviewData?.sheep?.healthyNum ?? "--"
+              羊一共有{{ overviewData?.sheep?.totalNum }}只，其中健康个体有{{
+                overviewData?.sheep?.healthyNum
               }}只
             </li>
           </div>
@@ -85,7 +105,6 @@
     </div>
   </div>
 </template>
-
 <script>
 // import messageData from "@/mock/messageData";
 // import statisticsData from "@/mock/statisticsData";
@@ -99,16 +118,10 @@ export default {
   name: "info-cards",
   mounted() {
     const that = this;
-    this.getTemperatureWarningItem();
-    getOverviewData().then((res) => {
-      that.overviewData = res;
-    });
-    getMessageData().then((res) => {
-      that.statisticsData = res;
-    });
-    getStatisticsData().then((res) => {
-      that.statisticsData = res;
-    });
+    this.getData();
+    setInterval(() => {
+      this.getData();
+    }, 2000);
   },
   data() {
     return {
@@ -117,13 +130,28 @@ export default {
       messageData: "",
       statisticsData: "",
       overviewData: "",
+      errorList: [],
       tableColumns,
       dayjs,
     };
   },
   props: ["chosenModel"],
   methods: {
-    // 获取温度报警的仓库
+    // // 获取温度报警的仓库
+    // getTemperatureWarningItem() {
+    //   setInterval(() => {
+    //     this.date = new Date();
+    //   }, 1000);
+    //   const keys = Object.keys(this.messageData);
+    //   // console.log(keys);
+    //   keys.forEach((key) => {
+    //     // console.log(123);
+    //     const item = this.messageData[key];
+    //     if (+item.temperature > 25) {
+    //       this.temperatureWarningItem = item;
+    //     }
+    //   });
+    // },
     getTemperatureWarningItem() {
       setInterval(() => {
         this.date = new Date();
@@ -131,9 +159,30 @@ export default {
       const keys = Object.keys(this.messageData);
       keys.forEach((key) => {
         const item = this.messageData[key];
-        if (+item.temperature >= 50) {
-          this.temperatureWarningItem = item;
+        if (+item.temperature < 20 || item.temperature > 25) {
+          // this.temperatureWarningItem = item;
+          this.errorList.push(item);
+        } else if (+item.humidity < 50 || item.temperature > 75) {
+          // this.humidityWarningItem = item;
+          this.errorList.push(item);
         }
+      });
+    },
+    getData() {
+      getOverviewData().then((res) => {
+        this.overviewData = res.data[0].data;
+        // console.log(res.data[0].data);
+      });
+      getMessageData().then((res) => {
+        this.messageData = res.data;
+        // console.log(that.messageData);
+        this.errorList = [];
+        this.getTemperatureWarningItem();
+      });
+
+      getStatisticsData().then((res) => {
+        this.statisticsData = res.data[0].data;
+        // console.log(this.statisticsData);
       });
     },
   },
