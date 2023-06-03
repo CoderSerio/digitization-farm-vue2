@@ -117,24 +117,29 @@ export default {
       timeId: 0, // 全局唯一的计时器id
       updateAnimation: null, // 动画更新函数（火焰动画）
       timer: null,
+      test: null,
     };
   },
   methods: {
     startElementTimer() {
-      this.timer = setInterval(() => {
+      this.timer = setTimeout(() => {
         // 定时器要做的
-        this.$nextTick(() => {
-          this.clearScene();
-          this.allOption();
+        // this.$nextTick(() => {
+        // 取消定时器
+        clearTimeout(this.timer);
+        this.clearScene();
+        this.allOption();
+        // 重新启动定时器
+        this.timer = setTimeout(() => {
+          this.startElementTimer();
+          // this.clearScene();
+          // this.allOption();
           // 取消定时器
-          clearInterval(this.timer);
-          // 重新启动定时器
-          this.timer = setInterval(() => {
-            this.startElementTimer();
-            console.log("30s动一次");
-          }, 30000);
-        });
-      }, 5000);
+          // clearInterval(this.timer);
+          console.log("10s动一次");
+        }, 10000);
+        // });
+      }, 10000);
     },
     allOption() {
       var deleteElement = document.getElementById("three");
@@ -218,6 +223,7 @@ export default {
         }
         child = null;
       });
+      cancelAnimationFrame(this.test);
       // this.sceneDomElement.innerHTML = "";
       this.renderer.forceContextLoss();
       this.renderer.dispose();
@@ -307,7 +313,7 @@ export default {
                   },
                 });
               }
-              granaryArr.push(obj);
+              // granaryArr.push(obj);
             }
           });
           model.add(gltf.scene);
@@ -342,7 +348,7 @@ export default {
       const that = this;
       this.renderer?.render(this.scene, this.camera);
       this.css2dRenderer?.render(this.scene, this.camera);
-      window.requestAnimationFrame(that.render3d);
+      this.test = window.requestAnimationFrame(that.render3d);
     },
     handle3dClick(event) {
       if (this.isLoading) return;
